@@ -1,0 +1,60 @@
+
+<html><head>
+	<!-- Load plotly.js into the DOM -->
+	
+	<script Language= "JavaScript" src="plotly-latest.min.js">
+	</script>
+	<script Language= "JavaScript">
+		function rc_circuit()
+		{
+			var V= Number(document.bla.txtNum3.value);
+			var r= Number(document.bla.txtNum.value);
+			var c= Number(document.bla.txtNum2.value);
+			var i=new Array(10000);
+      var t=new Array(10000);
+			var h=V/10000.0;
+			var v1=new Array(10000);
+			var n;
+			var dvdt=new Array(10000);
+			i[0]=V/r;
+			v1[0]=0;
+			dvdt[0]=i[0]/c;
+      t[0]=0;
+			for(n=1;n<10000;n++)
+			{
+				v1[n]=v1[n-1]+h*dvdt[n-1];
+				dvdt[n]=(V-v1[n])/(r*c);
+        t[n]=n*h;
+        i[n]=c*dvdt[n];
+			}
+
+			var trace1 = {
+            x:t,y:i,
+            type: 'scatter'
+		};
+  
+		var data=[trace1];
+		var layout = {
+         title: 'R_C Circuit',
+         showlegend: false
+        };
+		Plotly.newPlot('myDiv', data, layout, {scrollZoom: true});
+		}
+	</script>
+	
+</head>
+
+<body>
+	 <form name="bla">
+    <CENTER> Enter the value of resistence(in ohms)
+      <INPUT Type= "text" Name= "txtNum"> <BR><BR> 
+        Enter the value of capacitance(in farads)
+      <INPUT Type= "text" Name= "txtNum2"> <BR><BR> 
+        Enter the value of input dc voltage (in volts)
+        <INPUT Type= "text" Name= "txtNum3"> <BR><BR> 
+        <INPUT Type= "button" Value= "Ok" onClick= "rc_circuit()">
+        </center> </form>
+	<div id='myDiv'><!-- Plotly chart will be drawn inside this DIV --></div>
+	
+</body>
+</html>
